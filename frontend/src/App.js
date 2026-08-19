@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import './App.css';
-
 function App() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setResult(null);
     setError('');
   };
-
   const handleAnalyze = async () => {
     if (!file) { setError('Please select a PDF file first!'); return; }
     setLoading(true);
@@ -20,7 +17,7 @@ function App() {
     const formData = new FormData();
     formData.append('resume', file);
     try {
-      const res = await fetch('http://localhost:5000/analyze', {
+      const res = await fetch('https://ai-resume-analyzer-backend-4s8l.onrender.com/analyze', {
         method: 'POST',
         body: formData,
       });
@@ -31,20 +28,17 @@ function App() {
     }
     setLoading(false);
   };
-
   const getScoreColor = (score) => {
     if (score >= 75) return '#22c55e';
     if (score >= 50) return '#f59e0b';
     return '#ef4444';
   };
-
   return (
     <div className="app">
       <div className="header">
         <h1>AI Resume Analyzer</h1>
         <p>Upload your resume and get instant AI-powered feedback</p>
       </div>
-
       <div className="upload-box">
         <input type="file" accept=".pdf" onChange={handleFileChange} id="fileInput" />
         <label htmlFor="fileInput" className="file-label">
@@ -55,7 +49,6 @@ function App() {
         </button>
         {error && <p className="error">{error}</p>}
       </div>
-
       {result && (
         <div className="results">
           <div className="score-card">
@@ -65,7 +58,6 @@ function App() {
             </div>
             <p>Word Count: {result.word_count} words</p>
           </div>
-
           <div className="grid">
             <div className="card">
               <h3>✅ Skills Found ({result.found_skills.length})</h3>
@@ -75,7 +67,6 @@ function App() {
                 ))}
               </div>
             </div>
-
             <div className="card">
               <h3>❌ Skills Missing</h3>
               <div className="tags">
@@ -84,7 +75,6 @@ function App() {
                 ))}
               </div>
             </div>
-
             <div className="card">
               <h3>📋 Sections Found</h3>
               <div className="tags">
@@ -93,7 +83,6 @@ function App() {
                 ))}
               </div>
             </div>
-
             <div className="card">
               <h3>💡 Suggestions</h3>
               <ul>
@@ -109,5 +98,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
